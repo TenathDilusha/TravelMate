@@ -1,40 +1,62 @@
-# Node.js
+# -------------------
+# Python / Backend
+# -------------------
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# pip cache
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Pytest cache
+.pytest_cache/
+
+# VS Code settings
+.vscode/
+
+# IDE / OS files
+*.swp
+*.swo
+*.DS_Store
+
+# Logs
+*.log
+
+# -------------------
+# React / Frontend
+# -------------------
+
+# Node modules
 node_modules/
+
+# Build output
+build/
+dist/
+
+# Env files (if any secrets)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# npm logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
-yarn.lock
-.env
-.env.*
 
-# Logs
-logs
-*.log
-debug.log
+# -------------------
+# Others
+# -------------------
 
-# OS
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-.DS_Store
-.vscode/
-
-# Build
-dist/
-build/
-coverage/
-
-# Docker
-*.local
-docker-compose.override.yml
-
-# Misc
-*.swp
-*.swo
-*.bak
-*.tmp
-*.temp
-node_modules/
-.env
-.DS_Store
+# Folders with CSV or local data you don’t want in git (optional)
+reviews-data/*.csv
+place-data/*.csv

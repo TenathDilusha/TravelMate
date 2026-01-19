@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { sendContactEmail } from "../services/api";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -9,6 +10,8 @@ export default function Contact() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -17,15 +20,27 @@ export default function Contact() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically send the form data to your backend
-    console.log("Form submitted:", formData);
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: "", email: "", subject: "", message: "" });
-    }, 3000);
+    setSending(true);
+    setError(null);
+    
+    try {
+      const result = await sendContactEmail(formData);
+      if (result.success) {
+        setSubmitted(true);
+        setTimeout(() => {
+          setSubmitted(false);
+          setFormData({ name: "", email: "", subject: "", message: "" });
+        }, 5000);
+      } else {
+        setError(result.message || "Failed to send message. Please try again.");
+      }
+    } catch (err) {
+      setError("Failed to send message. Please try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -48,55 +63,17 @@ export default function Contact() {
               your Sri Lankan adventure with us, we'd love to hear from you!
             </p>
 
-            <div className="info-cards">
-              <div className="info-card">
-                <div className="info-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                </div>
-                <h3>Visit Us</h3>
-                <p>123 Galle Road<br />Colombo 03, Sri Lanka</p>
-              </div>
-
-              <div className="info-card">
-                <div className="info-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                    <polyline points="22,6 12,13 2,6"></polyline>
-                  </svg>
-                </div>
-                <h3>Email Us</h3>
-                <p>info@travelmatesrilanka.com<br />support@travelmatesrilanka.com</p>
-              </div>
-
-              <div className="info-card">
-                <div className="info-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                  </svg>
-                </div>
-                <h3>Call Us</h3>
-                <p>+94 11 234 5678<br />+94 77 123 4567</p>
-              </div>
-
-              <div className="info-card">
-                <div className="info-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M12 6v6l4 2"></path>
-                  </svg>
-                </div>
-                <h3>Working Hours</h3>
-                <p>Monday - Friday: 9:00 AM - 6:00 PM<br />Saturday: 10:00 AM - 4:00 PM</p>
-              </div>
-            </div>
 
             <div className="emergency-info">
               <h3>Emergency Travel Assistance</h3>
-              <p>For urgent travel-related inquiries while in Sri Lanka, contact our 24/7 helpline:</p>
-              <p className="emergency-number">+94 77 999 8888</p>
+              <p>For urgent travel-related inquiries while in Sri Lanka, contact :</p>
+              <p className="emergency-number">Tourism Information & Complaints (SLTDA): 1912</p>
+              <p className="emergency-number">Tourist Police: +94 11 242 1052</p>
+              <p className="emergency-number">Police Emergency: 119 or 011-2433333</p>
+              <p className="emergency-number">Government Information Center: 1919</p>
+              <p className="emergency-number">SriLankan Airlines (24/7): +94117 77 1979</p>
+              <p className="emergency-number">SLTDA Head Office (Colombo): +94 112426800 </p>
+
             </div>
           </div>
 
@@ -109,6 +86,16 @@ export default function Contact() {
                   <polyline points="22 4 12 14.01 9 11.01"></polyline>
                 </svg>
                 <p>Thank you for your message! We'll get back to you soon.</p>
+              </div>
+            )}
+            {error && (
+              <div className="error-message">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <p>{error}</p>
               </div>
             )}
             <form onSubmit={handleSubmit} className="contact-form">
@@ -164,25 +151,34 @@ export default function Contact() {
                 ></textarea>
               </div>
 
-              <button type="submit" className="submit-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <line x1="22" y1="2" x2="11" y2="13"></line>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-                Send Message
+              <button type="submit" className="submit-btn" disabled={sending}>
+                {sending ? (
+                  <>
+                    <svg className="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <circle cx="12" cy="12" r="10" strokeDasharray="31.4 31.4" strokeDashoffset="0">
+                        <animateTransform
+                          attributeName="transform"
+                          type="rotate"
+                          from="0 12 12"
+                          to="360 12 12"
+                          dur="1s"
+                          repeatCount="indefinite"
+                        />
+                      </circle>
+                    </svg>
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <line x1="22" y1="2" x2="11" y2="13"></line>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                    Send Message
+                  </>
+                )}
               </button>
             </form>
-          </div>
-        </div>
-
-        <div className="map-section">
-          <h2>Find Us</h2>
-          <div className="map-placeholder">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg>
-            <p>Colombo 03, Sri Lanka</p>
           </div>
         </div>
       </div>

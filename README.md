@@ -1,6 +1,6 @@
 # TravelMate – Sri Lanka Tourism Companion Chatbot
 
-TravelMate is a **tourism companion chatbot** for Sri Lanka that provides travel recommendations, information about places, and AI-powered suggestions to help users plan their trips. It consists of a **backend** built with FastAPI and a **frontend** built with a JavaScript framework (React/Vite/Next.js).  
+TravelMate is a **tourism companion chatbot** for Sri Lanka that provides travel recommendations, information about places, and AI-powered suggestions to help users plan their trips. It consists of a **backend** built with FastAPI and a **frontend** built with a JavaScript framework (React/Vite).  
 
 ---
 

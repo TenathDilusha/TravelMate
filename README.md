@@ -6,17 +6,51 @@ TravelMate is a **tourism companion chatbot** for Sri Lanka that provides travel
 
 ## **Project Structure**
 
+```bash
 TravelMate/
 │
-├─ backend/
-│ ├─ app.py
-│ ├─ requirements.txt
-│ └─ recommendation/ # AI recommendation module
+├── backend/
+│   ├── api/
+│   │   └── api.yaml
+│   ├── recommendation/
+│   │   ├── app.py
+│   │   ├── details.py
+│   │   ├── recommender.py
+│   │   └── vectorizer.py
+│   ├── requirements.txt
+│   └── Reviews.csv
 │
-└─ frontend/
-├─ package.json
-└─ src/ # React/Vue/JSX components
-
+├── frontend/
+│   ├── public/
+│   │   ├── index.html
+│   │   └── images/
+│   │       └── sl.jpg
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── index.jsx
+│   │   ├── components/
+│   │   │   ├── Features.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   ├── form.jsx
+│   │   │   ├── Header.jsx
+│   │   │   ├── Hero.jsx
+│   │   │   └── list.jsx
+│   │   ├── pages/
+│   │   │   ├── about.jsx
+│   │   │   ├── contacts.jsx
+│   │   │   ├── home.jsx
+│   │   │   ├── places.jsx
+│   │   │   └── reviews.jsx
+│   │   │   └── discover.jsx
+│   │   ├── services/
+│   │   │   └── api.js
+│   │   └── styles/
+│   │       └── styles.css
+│   ├── package.json
+│   └── vite.config.js
+│
+└── README.md
+```
 
 ---
 

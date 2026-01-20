@@ -111,10 +111,3 @@ License
 MIT License
 
 ---
-
-If you want, I can also **add a small “Quick Start” diagram** showing how backend and frontend connect, which makes it easier for new developers to understand your TravelMate project.  
-
-Do you want me to add that diagram?
-
-
-

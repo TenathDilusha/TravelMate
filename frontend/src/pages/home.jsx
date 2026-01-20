@@ -1,27 +1,9 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Hero from "../components/Hero";
-import RecommendationForm from "../components/form";
-import RecommendationList from "../components/list";
 import Features from "../components/Features";
-import { getRecommendations } from "../services/api";
 
 export default function Home() {
-  const [recommendations, setRecommendations] = useState([]);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const handleSubmit = async (preferences) => {
-    setLoading(true);
-    try {
-      const results = await getRecommendations(preferences);
-      setRecommendations(results);
-    } catch (error) {
-      console.error("Error fetching recommendations:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <>
@@ -33,8 +15,22 @@ export default function Home() {
             <p className="section-subtitle">
               Tell us what you're looking for and we'll recommend amazing places across the Pearl of the Indian Ocean
             </p>
-            <RecommendationForm onSubmit={handleSubmit} loading={loading} />
-            <RecommendationList recommendations={recommendations} loading={loading} />
+            <div className="discover-cta">
+              <button 
+                className="discover-cta-button"
+                onClick={() => navigate('/discover')}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <span>Start Discovering Destinations</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </button>
+              <p className="discover-cta-hint">Powered by AI • Personalized Recommendations</p>
+            </div>
           </div>
         </section>
         <Features />

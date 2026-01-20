@@ -26,6 +26,7 @@ export default function Footer() {
               <li><a href="./places">Destinations</a></li>
               <li><a href="./about">About Us</a></li>
               <li><a href="./contact">Contact</a></li>
+              s
             </ul>
           </div>
 

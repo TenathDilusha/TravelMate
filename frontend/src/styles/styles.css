@@ -1873,3 +1873,173 @@ body {
   background: #fff;
 }
 
+/* ==================== Reviews Page ==================== */
+.reviews-page {
+  min-height: 100vh;
+  padding-bottom: 3rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  transition: gap 0.3s ease;
+}
+
+.back-link:hover {
+  gap: 0.75rem;
+}
+
+.back-link svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.back-link-white {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-dark);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 2rem 0 1rem 0;
+  transition: gap 0.3s ease, opacity 0.3s ease;
+}
+
+.back-link-white:hover {
+  gap: 0.75rem;
+  opacity: 0.9;
+}
+
+.back-link-white svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.review-card {
+  background: var(--bg-white);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-left: 4px solid var(--primary-color);
+}
+
+.review-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.review-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.review-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.review-user-info svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--primary-color);
+  stroke-width: 2;
+}
+
+.review-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.review-rating {
+  font-size: 1.1rem;
+}
+
+.review-date {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.review-date svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+}
+
+.review-title {
+  color: var(--text-dark);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.review-text {
+  color: var(--text-light);
+  line-height: 1.8;
+  font-size: 1rem;
+}
+
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  color: #dc2626;
+}
+
+.error-message svg {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 1rem;
+  stroke-width: 2;
+}
+
+.error-message p {
+  font-size: 1.1rem;
+}
+
+/* ==================== Responsive Design - Reviews ==================== */
+@media (max-width: 768px) {
+  .review-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .review-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .review-card {
+    padding: 1.5rem;
+  }
+}
+

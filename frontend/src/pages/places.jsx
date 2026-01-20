@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Places() {
   const [locationsByCity, setLocationsByCity] = useState({});
@@ -7,6 +8,7 @@ export default function Places() {
   const [activeTab, setActiveTab] = useState("city");
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedSections, setExpandedSections] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -204,6 +206,10 @@ export default function Places() {
                         key={index} 
                         className="compact-place-card"
                         style={{ background: cardColors[index % cardColors.length] }}
+                        onClick={() => navigate(`/reviews/${encodeURIComponent(place)}`)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyPress={e => { if (e.key === 'Enter') navigate(`/reviews/${encodeURIComponent(place)}`); }}
                       >
                         <span className="compact-card-name">{place}</span>
                       </div>

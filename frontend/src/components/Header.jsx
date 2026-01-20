@@ -23,6 +23,7 @@ export default function Header() {
             <Link to="/places" className={isActive("/places")}>Places</Link>
             <Link to="/about" className={isActive("/about")}>About</Link>
             <Link to="/contact" className={isActive("/contact")}>Contact</Link>
+            <Link to="/discover" className={isActive("/discover")}>Discover</Link>
           </nav>
         </div>
       </div>

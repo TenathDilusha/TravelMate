@@ -1,22 +1,25 @@
-import { useState } from "react";
-import RecommendationForm from "./components/RecommendationForm";
-import RecommendationList from "./components/RecommendationList";
-import { getRecommendations } from "./services/api";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Home from "./pages/home";
+import Places from "./pages/places";
+import About from "./pages/about";
+import Contact from "./pages/contacts";
 import "./styles/styles.css";
 
 export default function App() {
-  const [recommendations, setRecommendations] = useState([]);
-
-  const handleSubmit = async (preferences) => {
-    const results = await getRecommendations(preferences);
-    setRecommendations(results);
-  };
-
   return (
-    <div className="app-container">
-      <h1>TravelMate</h1>
-      <RecommendationForm onSubmit={handleSubmit} />
-      <RecommendationList recommendations={recommendations} />
-    </div>
+    <Router>
+      <div className="app">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/places" element={<Places />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }

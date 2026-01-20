@@ -23,7 +23,11 @@ export default function About() {
           </div>
 
           <div className="about-section">
-            <div className="about-icon">🇱🇰</div>
+            
+            <div className="about-icon">
+              <img src="/images/sl.jpg" alt="Sri Lanka Flag" className="sri-lanka-flag-icon" />
+            </div>
+            
             <h2>Why Sri Lanka?</h2>
             <p>
               Known as the "Pearl of the Indian Ocean," Sri Lanka is a land of incredible diversity. 

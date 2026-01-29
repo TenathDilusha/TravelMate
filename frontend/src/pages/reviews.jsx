@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { API_BASE } from "../services/api";
 
 export default function ReviewsPage() {
   const { locationName } = useParams();
@@ -10,7 +11,7 @@ export default function ReviewsPage() {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/reviews?location_name=${encodeURIComponent(locationName)}`);
+        const res = await fetch(`${API_BASE}/reviews?location_name=${encodeURIComponent(locationName)}`);
         if (!res.ok) throw new Error("Failed to fetch reviews");
         const data = await res.json();
         setReviews(data);

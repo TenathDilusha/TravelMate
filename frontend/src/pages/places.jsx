@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "../services/api";
 
 export default function Places() {
   const [locationsByCity, setLocationsByCity] = useState({});
@@ -14,8 +15,8 @@ export default function Places() {
     const fetchData = async () => {
       try {
         const [citiesResponse, typesResponse] = await Promise.all([
-          fetch("http://localhost:8000/locations"),
-          fetch("http://localhost:8000/location-types")
+          fetch(`${API_BASE}/locations`),
+          fetch(`${API_BASE}/location-types`)
         ]);
 
         const citiesData = await citiesResponse.json();

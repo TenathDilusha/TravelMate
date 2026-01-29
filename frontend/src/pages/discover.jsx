@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "../services/api";
 
 export default function Discover() {
   const [preferences, setPreferences] = useState("");
@@ -30,7 +31,7 @@ export default function Discover() {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/recommend", {
+      const response = await fetch(`${API_BASE}/recommend`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,8 +1,8 @@
-from fastapi import FastAPI
+import os
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from recommender import recommend
 from details import locations, location_type, get_top_reviews
-from fastapi import Query
 
 app = FastAPI()
 
@@ -33,3 +33,8 @@ def get_locations():
 @app.get("/location-types")
 def get_location_types():
     return location_type()
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000)) 
+    import uvicorn
+    uvicorn.run("app:app", host="0.0.0.0", port=port)

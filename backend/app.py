@@ -18,6 +18,10 @@ app.add_middleware(
 def read_root():
     return {"status": "ok", "message": "TravelMate API is running"}
 
+@app.head("/")
+def head_root():
+    return None
+
 @app.get("/reviews")
 def get_reviews(location_name: str = Query(..., description="Name of the location")):
     return get_top_reviews(location_name)

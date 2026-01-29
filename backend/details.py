@@ -1,8 +1,8 @@
 import pandas as pd
 import os
 
-# Reviews.csv is in the backend directory (parent of recommendation)
-base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Reviews.csv is in the same directory as this file
+base_dir = os.path.dirname(os.path.abspath(__file__))
 df = pd.read_csv(os.path.join(base_dir, "Reviews.csv"))
 
 def locations():

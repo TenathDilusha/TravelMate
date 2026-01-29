@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from recommender import recommend
-from details import locations, location_type, get_top_reviews
+from .recommender import recommend
+from .details import locations, location_type, get_top_reviews
 from fastapi import Query
 
 app = FastAPI()

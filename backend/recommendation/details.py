@@ -1,6 +1,9 @@
 import pandas as pd
+import os
 
-df = pd.read_csv("../Reviews.csv")
+# Get the path to Reviews.csv relative to this file
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+df = pd.read_csv(os.path.join(base_dir, "Reviews.csv"))
 
 def locations():
     loc = {}

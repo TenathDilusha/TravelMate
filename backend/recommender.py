@@ -1,4 +1,7 @@
-from vectorizer import vectorizer, place_vectors, places
+try:
+    from .vectorizer import vectorizer, place_vectors, places
+except ImportError:
+    from vectorizer import vectorizer, place_vectors, places
 from sklearn.metrics.pairwise import cosine_similarity
 
 def recommend(text):

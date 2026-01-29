@@ -14,6 +14,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def read_root():
+    return {"status": "ok", "message": "TravelMate API is running"}
+
 @app.get("/reviews")
 def get_reviews(location_name: str = Query(..., description="Name of the location")):
     return get_top_reviews(location_name)

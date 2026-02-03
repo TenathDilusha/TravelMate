@@ -1,38 +1,13 @@
 import pandas as pd
-import os
 
-# Reviews.csv is in the same directory as this file
-base_dir = os.path.dirname(os.path.abspath(__file__))
-df = pd.read_csv(os.path.join(base_dir, "Reviews.csv"))
+df = pd.read_csv("./Reviews.csv")
 
 def locations():
-    loc = {}
-
-    for index, row in df.iterrows():
-        city = row["Located_City"]
-        place = row["Location_Name"]
-
-        if city not in loc:
-            loc[city] = []
-
-        if place not in loc[city]:
-            loc[city].append(place)
-
+    loc = df.groupby("Located_City")["Location_Name"].unique().apply(list).to_dict()
     return loc
 
 def location_type():
-    loc = {}
-
-    for index, row in df.iterrows():
-        l_type = row["Location_Type"]
-        place = row["Location_Name"]
-
-        if l_type not in loc:
-            loc[l_type] = []
-
-        if place not in loc[l_type]:
-            loc[l_type].append(place)
-
+    loc = df.groupby("Location_Type")["Location_Name"].unique().apply(list).to_dict()
     return loc
 
 def get_top_reviews(location_name):

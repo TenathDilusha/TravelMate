@@ -1,10 +1,7 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
-import os
 
-# Reviews.csv is in the same directory as this file
-base_dir = os.path.dirname(os.path.abspath(__file__))
-df = pd.read_csv(os.path.join(base_dir, "Reviews.csv"))
+df = pd.read_csv("./Reviews.csv")
 
 grouped = df.groupby("Location_Name")["Text"].apply(" ".join)
 

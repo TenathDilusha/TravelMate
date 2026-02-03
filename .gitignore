@@ -22,6 +22,9 @@ pip-delete-this-directory.txt
 # VS Code settings
 .vscode/
 
+# JetBrains IDE project files
+.idea/
+
 # IDE / OS files
 *.swp
 *.swo

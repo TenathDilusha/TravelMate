@@ -62,19 +62,21 @@ TravelMate/
 2. Navigate to the recommendation folder:
 
 ```bash
-cd d:/python/TravelMate/backend/recommendation
+cd backend
 ```
 Install dependencies
+
 ```bash
-Install required dependencies:
-```
 pip install -r ../requirements.txt
+```
 
 Run the backend server with Uvicorn:
+
 ```bash
-uvicorn app:app --reload
-Backend will be available at: http://127.0.0.1:8000/
+uvicorn app: app --reload
 ```
+
+Backend will be available at: http://127.0.0.1:8000/
 
 2. Frontend
 Open a new terminal.
@@ -82,16 +84,20 @@ Open a new terminal.
 Navigate to the frontend folder:
 
 ```bash
-cd d:/python/TravelMate/frontend
+cd frontend
 ```
 Install dependencies:
+
 ```bash
 npm install
 ```
+
 Run the frontend server:
+
 ```bash
 npm run dev
 ```
+
 Frontend will be available at the local dev server (http://localhost:5173 using Vite).
 
 Usage
@@ -111,3 +117,4 @@ License
 MIT License
 
 ---
+

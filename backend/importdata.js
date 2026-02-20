@@ -12,16 +12,29 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 
-const locationsMap = {};
+async function importData() {
+  const rows = [];
 
-fs.createReadStream("Reviews.csv")
-  .pipe(csv())
-  .on("data", async (row) => {
+  // Read all rows first
+  await new Promise((resolve, reject) => {
+    fs.createReadStream("Reviews.csv")
+      .pipe(csv())
+      .on("data", (row) => rows.push(row))
+      .on("end", resolve)
+      .on("error", reject);
+  });
+
+  console.log(`Read ${rows.length} rows from CSV. Importing...`);
+
+  const locationsMap = {};
+  let inserted = 0;
+  let errors = 0;
+
+  for (const row of rows) {
+    const { Located_City, Location_Name, Location_Type,
+            User_ID, Rating, Title, Text, Published_Date } = row;
     try {
-      const { Located_City, Location_Name, Location_Type,
-              User_ID, Rating, Title, Text, Published_Date } = row;
-
-      // Insert location only once, skip if already exists
+      // Insert location only once
       if (!locationsMap[Location_Name]) {
         const res = await pool.query(
           `INSERT INTO locations (name, city, type)
@@ -33,7 +46,6 @@ fs.createReadStream("Reviews.csv")
         if (res.rows.length > 0) {
           locationsMap[Location_Name] = res.rows[0].id;
         } else {
-          // Location already existed, fetch its id
           const existing = await pool.query(
             `SELECT id FROM locations WHERE name = $1`, [Location_Name]
           );
@@ -44,16 +56,21 @@ fs.createReadStream("Reviews.csv")
       const locationId = locationsMap[Location_Name];
 
       await pool.query(
-        `INSERT INTO reviews 
-         (location_id, user_id, rating, title, text, published_date)
+        `INSERT INTO reviews (location_id, user_id, rating, title, text, published_date)
          VALUES ($1, $2, $3, $4, $5, $6)`,
         [locationId, User_ID, Rating, Title, Text, Published_Date]
       );
 
+      inserted++;
+      if (inserted % 1000 === 0) console.log(`Inserted ${inserted} reviews...`);
     } catch (err) {
-      console.error(err);
+      errors++;
+      if (errors <= 5) console.error("Row error:", err.message);
     }
-  })
-  .on("end", () => {
-    console.log("CSV Imported Successfully!");
-  });
+  }
+
+  console.log(`Done! Inserted ${inserted} reviews, ${errors} errors.`);
+  await pool.end();
+}
+
+importData().catch(console.error);

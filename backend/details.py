@@ -11,7 +11,7 @@ def get_db_connection():
     if database_url:
         # Render provides DATABASE_URL with 'postgres://' scheme; psycopg2 needs 'postgresql://'
         database_url = database_url.replace("postgres://", "postgresql://", 1)
-        return psycopg2.connect(database_url)
+        return psycopg2.connect(database_url, sslmode="require")
     return psycopg2.connect(
         host=os.getenv("DB_HOST", "localhost"),
         user=os.getenv("DB_USER", "postgres"),

@@ -23,9 +23,8 @@ services:
   - type: web
     name: travelmate-frontend
     runtime: static
-    rootDir: frontend
     buildCommand: npm install && npm run build
-    staticPublishPath: dist
+    staticPublishPath: frontend/dist
     plan: free
     envVars:
       - key: VITE_API_BASE_URL

@@ -1,8 +1,34 @@
 {
+  "name": "travelmate",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TravelMate recommendation system",
+  "scripts": {
+    "dev": "cd frontend && vite",
+    "build": "cd frontend && vite build",
+    "preview": "cd frontend && vite preview"
+  },
   "dependencies": {
+    "@vitejs/plugin-react": "^5.1.2",
     "csv-parser": "^3.2.0",
     "dotenv": "^17.3.1",
     "fs": "^0.0.1-security",
-    "pg": "^8.18.0"
+    "pg": "^8.18.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^7.12.0",
+    "vite": "^7.3.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

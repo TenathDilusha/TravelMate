@@ -12,10 +12,30 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 
+const BATCH_SIZE = 500;
+
+async function batchInsert(table, columns, rows, onConflict = "") {
+  for (let i = 0; i < rows.length; i += BATCH_SIZE) {
+    const batch = rows.slice(i, i + BATCH_SIZE);
+    const values = [];
+    const params = [];
+    let paramIdx = 1;
+    for (const row of batch) {
+      const placeholders = row.map(() => `$${paramIdx++}`).join(", ");
+      values.push(`(${placeholders})`);
+      params.push(...row);
+    }
+    await pool.query(
+      `INSERT INTO ${table} (${columns.join(", ")}) VALUES ${values.join(", ")} ${onConflict}`,
+      params
+    );
+    console.log(`  ${table}: inserted batch up to row ${i + batch.length}`);
+  }
+}
+
 async function importData() {
   const rows = [];
 
-  // Read all rows first
   await new Promise((resolve, reject) => {
     fs.createReadStream("Reviews.csv")
       .pipe(csv())
@@ -24,52 +44,42 @@ async function importData() {
       .on("error", reject);
   });
 
-  console.log(`Read ${rows.length} rows from CSV. Importing...`);
+  console.log(`Read ${rows.length} rows. Building locations...`);
 
-  const locationsMap = {};
-  let inserted = 0;
-  let errors = 0;
-
+  // Collect unique locations
+  const uniqueLocations = {};
   for (const row of rows) {
-    const { Located_City, Location_Name, Location_Type,
-            User_ID, Rating, Title, Text, Published_Date } = row;
-    try {
-      // Insert location only once
-      if (!locationsMap[Location_Name]) {
-        const res = await pool.query(
-          `INSERT INTO locations (name, city, type)
-           VALUES ($1, $2, $3)
-           ON CONFLICT (name) DO NOTHING
-           RETURNING id`,
-          [Location_Name, Located_City, Location_Type]
-        );
-        if (res.rows.length > 0) {
-          locationsMap[Location_Name] = res.rows[0].id;
-        } else {
-          const existing = await pool.query(
-            `SELECT id FROM locations WHERE name = $1`, [Location_Name]
-          );
-          locationsMap[Location_Name] = existing.rows[0].id;
-        }
-      }
-
-      const locationId = locationsMap[Location_Name];
-
-      await pool.query(
-        `INSERT INTO reviews (location_id, user_id, rating, title, text, published_date)
-         VALUES ($1, $2, $3, $4, $5, $6)`,
-        [locationId, User_ID, Rating, Title, Text, Published_Date]
-      );
-
-      inserted++;
-      if (inserted % 1000 === 0) console.log(`Inserted ${inserted} reviews...`);
-    } catch (err) {
-      errors++;
-      if (errors <= 5) console.error("Row error:", err.message);
+    const { Location_Name, Located_City, Location_Type } = row;
+    if (!uniqueLocations[Location_Name]) {
+      uniqueLocations[Location_Name] = [Location_Name, Located_City, Location_Type];
     }
   }
 
-  console.log(`Done! Inserted ${inserted} reviews, ${errors} errors.`);
+  const locationRows = Object.values(uniqueLocations);
+  console.log(`Inserting ${locationRows.length} unique locations...`);
+  await batchInsert("locations", ["name", "city", "type"], locationRows, "ON CONFLICT DO NOTHING");
+
+  // Fetch all location IDs
+  const { rows: locRows } = await pool.query("SELECT id, name FROM locations");
+  const locMap = {};
+  for (const r of locRows) locMap[r.name] = r.id;
+
+  console.log(`Inserting reviews...`);
+  const reviewRows = rows
+    .filter(row => locMap[row.Location_Name])
+    .map(row => [
+      locMap[row.Location_Name],
+      row.User_ID,
+      row.Rating,
+      row.Title,
+      row.Text,
+      row.Published_Date
+    ]);
+
+  await batchInsert("reviews", ["location_id", "user_id", "rating", "title", "text", "published_date"], reviewRows, "");
+
+  const { rows: counts } = await pool.query("SELECT (SELECT COUNT(*) FROM locations) AS locs, (SELECT COUNT(*) FROM reviews) AS revs");
+  console.log(`Done! Locations: ${counts[0].locs}, Reviews: ${counts[0].revs}`);
   await pool.end();
 }
 

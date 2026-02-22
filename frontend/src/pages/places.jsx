@@ -9,6 +9,7 @@ export default function Places() {
   const [activeTab, setActiveTab] = useState("city");
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedSections, setExpandedSections] = useState({});
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,6 +20,10 @@ export default function Places() {
           fetch(`${API_BASE}/location-types`)
         ]);
 
+        if (!citiesResponse.ok || !typesResponse.ok) {
+          throw new Error("Failed to fetch data from server");
+        }
+
         const citiesData = await citiesResponse.json();
         const typesData = await typesResponse.json();
 
@@ -26,6 +31,7 @@ export default function Places() {
         setLocationsByType(typesData);
       } catch (error) {
         console.error("Error fetching locations:", error);
+        setError("Could not connect to the server. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -175,9 +181,16 @@ export default function Places() {
             <div className="loader"></div>
             <p>Loading destinations...</p>
           </div>
+        ) : error ? (
+          <div className="no-results">
+            <p>⚠️ {error}</p>
+          </div>
         ) : Object.keys(currentData).length === 0 ? (
           <div className="no-results">
-            <p>No destinations found for "{searchQuery}"</p>
+            {searchQuery
+              ? <p>No destinations found for "{searchQuery}"</p>
+              : <p>No destinations available.</p>
+            }
           </div>
         ) : (
           <div className="accordion-container">

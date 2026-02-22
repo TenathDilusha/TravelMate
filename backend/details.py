@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
 
 def get_db_connection():
-    neon_url = os.getenv("NEON_DATABASE_URL")
+    neon_url = os.getenv("DATABASE_URL") or os.getenv("NEON_DATABASE_URL")
     if neon_url:
         return psycopg2.connect(neon_url)
     return psycopg2.connect(

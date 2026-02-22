@@ -7,17 +7,15 @@ from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
 
 def get_db_connection():
-    database_url = os.getenv("DATABASE_URL")
-    if database_url:
-        # Render provides DATABASE_URL with 'postgres://' scheme; psycopg2 needs 'postgresql://'
-        database_url = database_url.replace("postgres://", "postgresql://", 1)
-        return psycopg2.connect(database_url, sslmode="require")
+    neon_url = os.getenv("NEON_DATABASE_URL")
+    if neon_url:
+        return psycopg2.connect(neon_url)
     return psycopg2.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        user=os.getenv("DB_USER", "postgres"),
-        password=os.getenv("DB_PASSWORD", ""),
-        dbname=os.getenv("DB_NAME", "travelmate"),
-        port=os.getenv("DB_PORT", 5432)
+        host=os.getenv("NEON_DB_HOST", "localhost"),
+        user=os.getenv("NEON_DB_USER", "postgres"),
+        password=os.getenv("NEON_DB_PASSWORD", ""),
+        dbname=os.getenv("NEON_DB_NAME", "travelmate"),
+        port=os.getenv("NEON_DB_PORT", 5432)
     )
 
 def locations():

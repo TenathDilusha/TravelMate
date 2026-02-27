@@ -1,29 +1,4 @@
-import { useState, useEffect } from 'react';
-
-const SLIDES = [
-  { src: '/images/sri-lanka.jpeg',  label: 'Sigiriya Rock Fortress' },
-  { src: '/images/Galle.jpg',       label: 'Galle Fort' },
-  { src: '/images/kandy-3.jpg',     label: 'Kandy Temple' },
-  { src: '/images/waterfall.jpg',   label: 'Diyaluma Falls' },
-  { src: '/images/train.jpg', label: 'Sri Lanka' },
-  { src: '/images/galle2.jpg',      label: 'Galle Harbour' },
-];
-
 export default function Hero() {
-  const [current, setCurrent] = useState(0);
-  const [fading, setFading] = useState(false);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setFading(true);
-      setTimeout(() => {
-        setCurrent(prev => (prev + 1) % SLIDES.length);
-        setFading(false);
-      }, 600);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
-
   return (
     <section className="hero hero-fullpage">
       <div className="hero-overlay"></div>
@@ -71,25 +46,32 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Right — full-height slideshow */}
+        {/* Right — image collage */}
         <div className="hero-image-side">
-          <div className={`hero-slideshow ${fading ? 'slide-fading' : ''}`}>
-            <img
-              src={SLIDES[current].src}
-              alt={SLIDES[current].label}
-              className="hero-slide-img"
-            />
-            <div className="hero-slide-overlay"></div>
-            <div className="hero-slide-label">{SLIDES[current].label}</div>
-            <div className="hero-slide-dots">
-              {SLIDES.map((_, i) => (
-                <button
-                  key={i}
-                  className={`slide-dot ${i === current ? 'active' : ''}`}
-                  onClick={() => { setFading(true); setTimeout(() => { setCurrent(i); setFading(false); }, 600); }}
-                  aria-label={`Go to slide ${i + 1}`}
-                />
-              ))}
+          <div className="hero-collage">
+            <div className="collage-item collage-main">
+              <img src="/images/sri-lanka.jpeg" alt="Sigiriya Rock Fortress" />
+              <span className="collage-label">Sigiriya</span>
+            </div>
+            <div className="collage-item collage-top-right">
+              <img src="/images/Galle.jpg" alt="Galle Fort" />
+              <span className="collage-label">Galle Fort</span>
+            </div>
+            <div className="collage-item collage-mid-right">
+              <img src="/images/kandy-3.jpg" alt="Kandy Temple" />
+              <span className="collage-label">Kandy</span>
+            </div>
+            <div className="collage-item collage-bot-left">
+              <img src="/images/waterfall.jpg" alt="Diyaluma Falls" />
+              <span className="collage-label">Waterfall</span>
+            </div>
+            <div className="collage-item collage-bot-mid">
+              <img src="/images/galle2.jpg" alt="Galle Harbour" />
+              <span className="collage-label">Harbour</span>
+            </div>
+            <div className="collage-item collage-bot-right">
+              <img src="/images/train.jpg" alt="Sri Lanka" />
+              <span className="collage-label">Landscapes</span>
             </div>
           </div>
         </div>

@@ -25,7 +25,7 @@ export default function About() {
           <div className="about-section">
             
             <div className="about-icon">
-              <img src="/images/sl.jpg" alt="Sri Lanka Flag" className="sri-lanka-flag-icon" />
+              <img src="/images/sri-lanka.jpeg" alt="Sri Lanka" className="sri-lanka-flag-icon" />
             </div>
             
             <h2>Why Sri Lanka?</h2>
@@ -60,8 +60,8 @@ export default function About() {
                 <div className="stat-label">Traveler Reviews</div>
               </div>
               <div className="stat-card">
-                <div className="stat-number">8</div>
-                <div className="stat-label">UNESCO World Heritage Sites</div>
+                <div className="stat-number">AI</div>
+                <div className="stat-label">AI-Powered Recommendations</div>
               </div>
               <div className="stat-card">
                 <div className="stat-number">24/7</div>

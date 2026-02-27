@@ -1,38 +1,71 @@
 export default function Hero() {
   return (
-    <section className="hero">
+    <section className="hero hero-fullpage">
       <div className="hero-overlay"></div>
-      <div className="container">
-        <div className="hero-content">
+
+      <div className="hero-split">
+        {/* Left — text content */}
+        <div className="hero-text-side">
+          <span className="hero-eyebrow">✦ Your AI Travel Companion</span>
           <h1 className="hero-title">
-            Discover the Pearl of the Indian Ocean
+            Discover the <span className="hero-highlight">Pearl</span> of<br />
+            the Indian Ocean
           </h1>
           <p className="hero-subtitle">
-            AI-powered recommendations for exploring Sri Lanka's breathtaking landscapes, 
-            ancient heritage sites, pristine beaches, and vibrant culture.
+            From misty tea-draped highlands to golden shores kissed by two oceans —
+            let our AI guide you to Sri Lanka's most extraordinary corners, perfectly
+            matched to your travel style.
           </p>
+
           <div className="hero-features">
             <div className="hero-feature">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                <path d="M2 17l10 5 10-5"></path>
-                <path d="M2 12l10 5 10-5"></path>
-              </svg>
-              <span>8 UNESCO Sites</span>
-            </div>
-            <div className="hero-feature">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 6v6l4 2"></path>
+                <path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/>
+                <circle cx="12" cy="9" r="2.5"/>
               </svg>
               <span>70+ Destinations</span>
             </div>
             <div className="hero-feature">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
               </svg>
-              <span>2500+ Years of History</span>
+              <span>10K+ Traveler Reviews</span>
+            </div>
+            <div className="hero-feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+              </svg>
+              <span>AI-Powered Picks</span>
+            </div>
+          </div>
+
+          <div className="hero-cta-group">
+            <a href="/discover" className="btn-hero-primary">Start Exploring</a>
+            <a href="/about" className="btn-hero-secondary">How It Works</a>
+          </div>
+        </div>
+
+        {/* Right — image mosaic */}
+        <div className="hero-image-side">
+          <div className="hero-mosaic">
+            <div className="mosaic-main">
+              <img src="/images/sri-lanka.jpeg" alt="Sri Lanka landscape" />
+              <div className="mosaic-label">Sigiriya Rock Fortress</div>
+            </div>
+            <div className="mosaic-stack">
+              <div className="mosaic-item">
+                <img src="/images/Galle.jpg" alt="Galle Fort" />
+                <div className="mosaic-label">Galle Fort</div>
+              </div>
+              <div className="mosaic-item">
+                <img src="/images/kandy-3.jpg" alt="Kandy" />
+                <div className="mosaic-label">Kandy Temple</div>
+              </div>
+              <div className="mosaic-item">
+                <img src="/images/waterfall.jpg" alt="Waterfall" />
+                <div className="mosaic-label">Diyaluma Falls</div>
+              </div>
             </div>
           </div>
         </div>

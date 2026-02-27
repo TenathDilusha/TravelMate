@@ -137,17 +137,231 @@ body {
   overflow: hidden;
 }
 
-.hero { padding: 5rem 0; }
 .discover-hero { padding: 4rem 0 5rem; }
+
+/* Full-page hero override */
+.hero.hero-fullpage {
+  min-height: 100vh;
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+}
+
+.hero-split {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: 6rem 4rem 4rem;
+  gap: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Left text side */
+.hero-text-side {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.hero-eyebrow {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  background: rgba(255,255,255,0.15);
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border-radius: 30px;
+  backdrop-filter: blur(8px);
+  width: fit-content;
+}
+
+.hero-title {
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.hero-highlight {
+  background: linear-gradient(135deg, #ffd700, #ffb347);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  opacity: 0.92;
+  line-height: 1.8;
+  max-width: 520px;
+  margin: 0;
+}
+
+.hero-features {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.hero-feature {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.12);
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  backdrop-filter: blur(10px);
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: background 0.2s;
+}
+
+.hero-feature:hover { background: rgba(255,255,255,0.2); }
+
+.hero-feature svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+.hero-cta-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.btn-hero-primary {
+  padding: 0.9rem 2rem;
+  background: white;
+  color: var(--primary);
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.btn-hero-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+}
+
+.btn-hero-secondary {
+  padding: 0.9rem 2rem;
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  backdrop-filter: blur(8px);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.btn-hero-secondary:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+
+/* Right image side */
+.hero-image-side {
+  flex: 1 1 48%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-mosaic {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 560px;
+  height: 500px;
+}
+
+.mosaic-main {
+  flex: 1.4;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+}
+
+.mosaic-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.mosaic-main:hover img { transform: scale(1.04); }
+
+.mosaic-stack {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mosaic-item {
+  flex: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.mosaic-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.mosaic-item:hover img { transform: scale(1.06); }
+
+.mosaic-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.6rem 0.8rem;
+  background: linear-gradient(transparent, rgba(0,0,0,0.65));
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.mosaic-main .mosaic-label {
+  font-size: 0.9rem;
+  padding: 1rem;
+}
 
 .hero-overlay, .discover-hero-bg {
   position: absolute;
   inset: 0;
   background-image: 
-    radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+    radial-gradient(circle at 10% 60%, rgba(255,255,255,0.08) 0%, transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(255,255,255,0.06) 0%, transparent 40%);
 }
 
+/* Non-fullpage hero shared styles */
 .hero-content, .discover-hero-content {
   position: relative;
   text-align: center;
@@ -155,43 +369,19 @@ body {
   margin: 0 auto;
 }
 
-.hero-title, .discover-title, .page-title {
+.discover-title, .page-title {
   font-size: 3rem;
   font-weight: 800;
   margin-bottom: 1rem;
   text-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.hero-subtitle, .discover-subtitle, .page-subtitle {
+.discover-subtitle, .page-subtitle {
   font-size: 1.25rem;
   opacity: 0.95;
   line-height: 1.8;
   max-width: 600px;
   margin: 0 auto;
-}
-
-.hero-features {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-  margin-top: 2rem;
-}
-
-.hero-feature {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(255,255,255,0.1);
-  padding: 0.75rem 1.5rem;
-  border-radius: 50px;
-  backdrop-filter: blur(10px);
-}
-
-.hero-feature svg {
-  width: 20px;
-  height: 20px;
-  stroke-width: 2;
 }
 
 .discover-badge {
@@ -1497,6 +1687,21 @@ body {
 }
 
 /* ==================== Responsive ==================== */
+@media (max-width: 1024px) {
+  .hero-split {
+    flex-direction: column;
+    min-height: auto;
+    padding: 5rem 2rem 3rem;
+    text-align: center;
+  }
+  .hero-text-side { align-items: center; }
+  .hero-subtitle { margin: 0 auto; }
+  .hero-eyebrow { margin: 0 auto; }
+  .hero-cta-group { justify-content: center; }
+  .hero-image-side { width: 100%; }
+  .hero-mosaic { max-width: 100%; height: 320px; }
+}
+
 @media (max-width: 768px) {
   .hero-title, .discover-title, .page-title { font-size: 2rem; }
   .hero-subtitle, .discover-subtitle, .page-subtitle { font-size: 1rem; }
@@ -1533,5 +1738,7 @@ body {
   
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .info-cards { grid-template-columns: 1fr; }
+  .hero-mosaic { height: 220px; }
+  .mosaic-main .mosaic-label, .mosaic-label { font-size: 0.7rem; padding: 0.4rem 0.6rem; }
 }
 

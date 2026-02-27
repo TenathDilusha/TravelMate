@@ -25,7 +25,7 @@ export default function About() {
           <div className="about-section">
             
             <div className="about-icon">
-              <img src="/images/sri-lanka.jpeg" alt="Sri Lanka" className="sri-lanka-flag-icon" />
+              <img src="/images/sl.jpg" alt="Sri Lanka" className="sri-lanka-flag-icon" />
             </div>
             
             <h2>Why Sri Lanka?</h2>

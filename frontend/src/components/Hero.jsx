@@ -1,4 +1,29 @@
+import { useState, useEffect } from 'react';
+
+const SLIDES = [
+  { src: '/images/sri-lanka.jpeg',  label: 'Sigiriya Rock Fortress' },
+  { src: '/images/Galle.jpg',       label: 'Galle Fort' },
+  { src: '/images/kandy-3.jpg',     label: 'Kandy Temple' },
+  { src: '/images/waterfall.jpg',   label: 'Diyaluma Falls' },
+  { src: '/images/train.jpg', label: 'Sri Lanka' },
+  { src: '/images/galle2.jpg',      label: 'Galle Harbour' },
+];
+
 export default function Hero() {
+  const [current, setCurrent] = useState(0);
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setFading(true);
+      setTimeout(() => {
+        setCurrent(prev => (prev + 1) % SLIDES.length);
+        setFading(false);
+      }, 600);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <section className="hero hero-fullpage">
       <div className="hero-overlay"></div>
@@ -46,26 +71,25 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Right — image mosaic */}
+        {/* Right — full-height slideshow */}
         <div className="hero-image-side">
-          <div className="hero-mosaic">
-            <div className="mosaic-main">
-              <img src="/images/sri-lanka.jpeg" alt="Sri Lanka landscape" />
-              <div className="mosaic-label">Sigiriya Rock Fortress</div>
-            </div>
-            <div className="mosaic-stack">
-              <div className="mosaic-item">
-                <img src="/images/Galle.jpg" alt="Galle Fort" />
-                <div className="mosaic-label">Galle Fort</div>
-              </div>
-              <div className="mosaic-item">
-                <img src="/images/kandy-3.jpg" alt="Kandy" />
-                <div className="mosaic-label">Kandy Temple</div>
-              </div>
-              <div className="mosaic-item">
-                <img src="/images/waterfall.jpg" alt="Waterfall" />
-                <div className="mosaic-label">Diyaluma Falls</div>
-              </div>
+          <div className={`hero-slideshow ${fading ? 'slide-fading' : ''}`}>
+            <img
+              src={SLIDES[current].src}
+              alt={SLIDES[current].label}
+              className="hero-slide-img"
+            />
+            <div className="hero-slide-overlay"></div>
+            <div className="hero-slide-label">{SLIDES[current].label}</div>
+            <div className="hero-slide-dots">
+              {SLIDES.map((_, i) => (
+                <button
+                  key={i}
+                  className={`slide-dot ${i === current ? 'active' : ''}`}
+                  onClick={() => { setFading(true); setTimeout(() => { setCurrent(i); setFading(false); }, 600); }}
+                  aria-label={`Go to slide ${i + 1}`}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -73,3 +97,4 @@ export default function Hero() {
     </section>
   );
 }
+

@@ -16,26 +16,19 @@ TravelMate is a travel companion application designed to help users plan, organi
 ## Getting Started
 
 ### Backend
-1. Navigate to the `backend` folder.
-2. Install dependencies:
+1. Open a terminal and run:
    ```bash
-   npm install   # For Node.js
-   pip install -r requirements.txt   # For Python
-   ```
-3. Start the backend server:
-   ```bash
-   npm start   # For Node.js
-   python app.py   # For Python
+   cd backend
+   npm install
+   pip install -r requirements.txt
+   python3 app.py
    ```
 
 ### Frontend
-1. Navigate to the `frontend` folder.
-2. Install dependencies:
+1. Open a new terminal and run:
    ```bash
+   cd frontend
    npm install
-   ```
-3. Start the frontend server:
-   ```bash
    npm run dev
    ```
 
@@ -44,6 +37,3 @@ Contributions are welcome! Please open issues or submit pull requests for improv
 
 ## License
 This project is licensed under the MIT License.
-
-## Contact
-For questions or support, please contact the project maintainers.

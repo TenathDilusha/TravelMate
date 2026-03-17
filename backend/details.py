@@ -3,19 +3,31 @@ import psycopg2
 import os
 from dotenv import load_dotenv
 
-# Load from root .env (one level up from backend/)
-load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
+# Load local backend .env first, then project root .env as a fallback.
+BASE_DIR = os.path.dirname(__file__)
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+load_dotenv(os.path.join(BASE_DIR, "..", ".env"))
 
 def get_db_connection():
-    neon_url = os.getenv("DATABASE_URL") or os.getenv("NEON_DATABASE_URL")
-    if neon_url:
-        return psycopg2.connect(neon_url)
+    # Use Neon DB when hosted (production), else use local DB
+    if os.getenv("NODE_ENV") == "production" or os.getenv("DATABASE_URL") or os.getenv("NEON_DATABASE_URL"):
+        neon_url = os.getenv("DATABASE_URL") or os.getenv("NEON_DATABASE_URL")
+        if neon_url:
+            return psycopg2.connect(neon_url)
+        return psycopg2.connect(
+            host=os.getenv("NEON_DB_HOST"),
+            user=os.getenv("NEON_DB_USER"),
+            password=os.getenv("NEON_DB_PASSWORD", ""),
+            dbname=os.getenv("NEON_DB_NAME"),
+            port=int(os.getenv("NEON_DB_PORT", 5432))
+        )
+    # Local DB connection
     return psycopg2.connect(
-        host=os.getenv("NEON_DB_HOST", "localhost"),
-        user=os.getenv("NEON_DB_USER", "postgres"),
-        password=os.getenv("NEON_DB_PASSWORD", ""),
-        dbname=os.getenv("NEON_DB_NAME", "travelmate"),
-        port=os.getenv("NEON_DB_PORT", 5432)
+        host=os.getenv("DB_HOST", "localhost"),
+        user=os.getenv("DB_USER", "postgres"),
+        password=os.getenv("DB_PASSWORD", ""),
+        dbname=os.getenv("DB_NAME", "travelmate"),
+        port=int(os.getenv("DB_PORT", 5432))
     )
 
 def locations():

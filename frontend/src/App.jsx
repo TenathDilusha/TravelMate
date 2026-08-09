@@ -8,6 +8,10 @@ import About from "./pages/about";
 import Contact from "./pages/contacts";
 import ReviewsPage from "./pages/reviews";
 import Discover from "./pages/discover";
+import Login from "./pages/login";
+import Register from "./pages/register";
+import AuthCallback from "./pages/authCallback";
+import { AuthProvider } from "./context/AuthContext";
 import "./styles/styles.css";
 
 function ScrollToTop() {
@@ -18,22 +22,37 @@ function ScrollToTop() {
   return null;
 }
 
+function AppShell() {
+  const { pathname } = useLocation();
+  const isAuthPage =
+    pathname === "/login" || pathname === "/register" || pathname.startsWith("/auth/");
+
+  return (
+    <div className={`app ${isAuthPage ? "app-auth" : ""}`}>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/places" element={<Places />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/discover" element={<Discover />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/reviews/:locationName" element={<ReviewsPage />} />
+      </Routes>
+      {!isAuthPage && <Footer />}
+    </div>
+  );
+}
+
 export default function App() {
   return (
-    <Router>
-      <ScrollToTop />
-      <div className="app">
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/places" element={<Places />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/discover" element={<Discover />} />
-          <Route path="/reviews/:locationName" element={<ReviewsPage />} />
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <ScrollToTop />
+        <AppShell />
+      </Router>
+    </AuthProvider>
   );
 }

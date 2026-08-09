@@ -82,10 +82,24 @@ CREATE TABLE IF NOT EXISTS place_vectors (
   location_id INTEGER PRIMARY KEY REFERENCES locations(id) ON DELETE CASCADE,
   vector JSONB NOT NULL
 );
+
+-- App users (email/password + OAuth)
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(255),
+  email VARCHAR(255),
+  password_hash TEXT,
+  provider VARCHAR(50) NOT NULL,
+  provider_id VARCHAR(255) NOT NULL,
+  name VARCHAR(255),
+  avatar_url TEXT,
+  created_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE (provider, provider_id)
+);
 "
 ```
 
-**Relationships:** `locations` 1→many `reviews`; `locations` 1→1 `place_vectors`; `tfidf_model` holds the shared vocabulary/IDF for transforming preference text. Recommendations read vectors from Postgres (not from an in-memory CSV fit).
+**Relationships:** `locations` 1→many `reviews`; `locations` 1→1 `place_vectors`; `tfidf_model` holds the shared vocabulary/IDF for transforming preference text. Recommendations read vectors from Postgres (not from an in-memory CSV fit). `users` stores registered accounts (`local` email/password or OAuth providers).
 
 ### 3. Backend
 
@@ -105,6 +119,41 @@ The API serves:
 - `GET /location-types` — destinations grouped by type  
 - `GET /reviews?location_name=...` — top reviews for a place  
 - `POST /recommend` — AI recommendations from natural-language preferences (loads TF-IDF data from Postgres)  
+- `POST /auth/register` — create local account (username + email + password)  
+- `POST /auth/login` — email/password login (404 → not registered)  
+- `GET /auth/google` / `GET /auth/github` / `GET /auth/facebook` — OAuth (`mode=login|register`)  
+- `GET /auth/me` — current user (session cookie)  
+- `POST /auth/logout` — clear session cookie  
+
+### OAuth setup (Google + GitHub)
+
+Add these to the root `.env` (see `.env.example`):
+
+```env
+FRONTEND_URL=http://localhost:5173
+BACKEND_URL=http://localhost:8000
+JWT_SECRET=change-me-to-a-long-random-secret
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+GITHUB_CLIENT_ID=...
+GITHUB_CLIENT_SECRET=...
+FACEBOOK_APP_ID=...
+FACEBOOK_APP_SECRET=...
+```
+
+Provider redirect URIs:
+
+- Google: `http://localhost:8000/auth/google/callback`
+- GitHub: `http://localhost:8000/auth/github/callback`
+- Facebook: `http://localhost:8000/auth/facebook/callback`
+
+Auth flows:
+
+- **Register:** username required, then email/password **or** OAuth provider. Saved in `users`.
+- **Login:** email/password checked in DB; if missing → redirect to `/register` with “User not registered…”. OAuth login only succeeds if that provider account already exists; otherwise same register redirect.
+- Session is an **httpOnly** `travelmate_session` cookie. Frontend uses `credentials: "include"`.
+
+For local dev keep `COOKIE_SAMESITE=lax` and `COOKIE_SECURE=false`. If the frontend and API are on different sites in production, use `COOKIE_SAMESITE=none` and `COOKIE_SECURE=true`, and set `CORS_ORIGINS` to your frontend origin.
 
 Interactive docs: `http://localhost:8000/docs`
 
@@ -141,6 +190,7 @@ TravelMate/
 - **Discover** — preference-based AI recommendations (TF-IDF over review text, served from Postgres)
 - **Places** — browse Sri Lankan destinations by city and category
 - **Reviews** — top-rated traveler reviews per location
+- **Sign in** — Google and GitHub OAuth (httpOnly session cookie)
 - **About & Contact** — project info and contact form
 
 ## Contributing

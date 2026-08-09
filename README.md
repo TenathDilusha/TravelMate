@@ -8,9 +8,9 @@ TravelMate is an AI-powered travel companion for exploring Sri Lanka. Describe w
 |-------|--------------|
 | **Frontend** | React 18, React Router, Vite |
 | **Backend API** | Python, FastAPI, Uvicorn |
-| **Recommendations** | scikit-learn (TF-IDF + cosine similarity), pandas |
+| **Recommendations** | scikit-learn (TF-IDF + cosine similarity), vectors stored in PostgreSQL |
 | **Database** | PostgreSQL (`psycopg2` in Python, `pg` in Node) |
-| **Data import** | Node.js (`csv-parser`) — seeds DB from `Reviews.csv` |
+| **Data import** | Node.js (`csv-parser`) — seeds DB from `Reviews.csv`; `build_vectors.py` persists TF-IDF |
 | **Deployment** | [Render](render.yaml) (API + static site), [Vercel](vercel.json) (frontend) |
 
 ## Prerequisites
@@ -68,8 +68,24 @@ CREATE TABLE IF NOT EXISTS reviews (
   text TEXT,
   published_date TIMESTAMP
 );
+
+-- TF-IDF model (vocabulary + IDF weights) used to vectorize user preferences
+CREATE TABLE IF NOT EXISTS tfidf_model (
+  id SERIAL PRIMARY KEY,
+  vocabulary JSONB NOT NULL,
+  idf JSONB NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- One sparse TF-IDF vector per location (locations 1 — 1 place_vectors)
+CREATE TABLE IF NOT EXISTS place_vectors (
+  location_id INTEGER PRIMARY KEY REFERENCES locations(id) ON DELETE CASCADE,
+  vector JSONB NOT NULL
+);
 "
 ```
+
+**Relationships:** `locations` 1→many `reviews`; `locations` 1→1 `place_vectors`; `tfidf_model` holds the shared vocabulary/IDF for transforming preference text. Recommendations read vectors from Postgres (not from an in-memory CSV fit).
 
 ### 3. Backend
 
@@ -77,8 +93,9 @@ CREATE TABLE IF NOT EXISTS reviews (
 cd backend
 pip install -r requirements.txt
 npm install
-npm run import    # loads Reviews.csv into PostgreSQL (run once)
-python3 app.py    # API at http://localhost:8000
+npm run import              # loads Reviews.csv into PostgreSQL (run once)
+npm run build-vectors       # or: python3 build_vectors.py — fit TF-IDF from DB and store vectors
+python3 app.py              # API at http://localhost:8000
 ```
 
 The API serves:
@@ -87,7 +104,7 @@ The API serves:
 - `GET /locations` — destinations grouped by city  
 - `GET /location-types` — destinations grouped by type  
 - `GET /reviews?location_name=...` — top reviews for a place  
-- `POST /recommend` — AI recommendations from natural-language preferences  
+- `POST /recommend` — AI recommendations from natural-language preferences (loads TF-IDF data from Postgres)  
 
 Interactive docs: `http://localhost:8000/docs`
 
@@ -109,8 +126,8 @@ The app opens in your browser (default Vite dev server). It talks to the API via
 TravelMate/
 ├── backend/          # FastAPI app, ML recommender, DB access, CSV import
 │   ├── app.py
-│   ├── recommender.py
-│   ├── vectorizer.py
+│   ├── recommender.py      # loads TF-IDF vectors from Postgres
+│   ├── build_vectors.py    # fit TF-IDF from DB reviews and store vectors
 │   ├── details.py
 │   └── Reviews.csv
 ├── frontend/         # React + Vite SPA
@@ -121,7 +138,7 @@ TravelMate/
 
 ## Features
 
-- **Discover** — preference-based AI recommendations (TF-IDF over review text)
+- **Discover** — preference-based AI recommendations (TF-IDF over review text, served from Postgres)
 - **Places** — browse Sri Lankan destinations by city and category
 - **Reviews** — top-rated traveler reviews per location
 - **About & Contact** — project info and contact form

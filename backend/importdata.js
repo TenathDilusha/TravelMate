@@ -1,17 +1,56 @@
 const fs = require("fs");
+const path = require("path");
 const csv = require("csv-parser");
 const { Pool } = require("pg");
-require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
-const pool = new Pool({
-  host: process.env.NEON_DB_HOST,
-  user: process.env.NEON_DB_USER,
-  password: process.env.NEON_DB_PASSWORD,
-  database: process.env.NEON_DB_NAME,
-  port: process.env.NEON_DB_PORT,
-  ssl: { rejectUnauthorized: false },
-});
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+require("dotenv").config({ path: path.resolve(__dirname, ".env") });
 
+function env(name, fallbackName) {
+  const value = process.env[name] ?? (fallbackName ? process.env[fallbackName] : undefined);
+  return value === undefined || value === null ? undefined : String(value);
+}
+
+function createPool() {
+  const host = env("NEON_DB_HOST", "DB_HOST");
+  const user = env("NEON_DB_USER", "DB_USER");
+  const password = env("NEON_DB_PASSWORD", "DB_PASSWORD");
+  const database = env("NEON_DB_NAME", "DB_NAME");
+  const port = env("NEON_DB_PORT", "DB_PORT") || "5432";
+
+  const missing = [];
+  if (!host) missing.push("NEON_DB_HOST or DB_HOST");
+  if (!user) missing.push("NEON_DB_USER or DB_USER");
+  if (password === undefined) missing.push("NEON_DB_PASSWORD or DB_PASSWORD");
+  if (!database) missing.push("NEON_DB_NAME or DB_NAME");
+
+  if (missing.length) {
+    throw new Error(
+      `Missing database env vars: ${missing.join(", ")}.\n` +
+        `Create a .env file in the project root (see .env.example).`
+    );
+  }
+
+  const useSsl =
+    process.env.NODE_ENV === "production" ||
+    Boolean(process.env.NEON_DB_HOST) ||
+    Boolean(process.env.DATABASE_URL) ||
+    Boolean(process.env.NEON_DATABASE_URL);
+
+  const config = {
+    host,
+    user,
+    password, // must be a string for SCRAM auth
+    database,
+    port: Number(port),
+  };
+  if (useSsl) {
+    config.ssl = { rejectUnauthorized: false };
+  }
+  return new Pool(config);
+}
+
+const pool = createPool();
 const BATCH_SIZE = 500;
 
 async function batchInsert(table, columns, rows, onConflict = "") {
@@ -83,4 +122,8 @@ async function importData() {
   await pool.end();
 }
 
-importData().catch(console.error);
+importData().catch((err) => {
+  console.error(err.message || err);
+  process.exitCode = 1;
+  pool.end().catch(() => {});
+});

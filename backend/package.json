@@ -4,7 +4,8 @@
   "private": true,
   "description": "TravelMate backend Node.js scripts",
   "scripts": {
-    "import": "node importdata.js"
+    "import": "node importdata.js",
+    "build-vectors": "python3 build_vectors.py"
   },
   "dependencies": {
     "csv-parser": "^3.2.0",

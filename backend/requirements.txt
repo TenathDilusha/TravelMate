@@ -5,3 +5,8 @@ scipy
 numpy
 psycopg2-binary
 python-dotenv
+httpx
+PyJWT
+bcrypt
+email-validator
+pydantic[email]

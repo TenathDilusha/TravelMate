@@ -1,16 +1,16 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, loading, logout, isAuthenticated } = useAuth();
 
-  // Close menu on route change
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname]);
 
-  // Prevent body scroll when menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -39,14 +39,34 @@ export default function Header() {
             <span className="logo-text">TravelMate</span>
           </Link>
 
-          {/* Desktop nav */}
           <nav className="nav desktop-nav">
             {navLinks.map(({ to, label }) => (
               <Link key={to} to={to} className={isActive(to)}>{label}</Link>
             ))}
+
+            {!loading && (
+              isAuthenticated ? (
+                <div className="auth-user desktop-auth">
+                  {user.avatar_url ? (
+                    <img src={user.avatar_url} alt="" className="auth-avatar" />
+                  ) : (
+                    <span className="auth-avatar auth-avatar-fallback">
+                      {(user.username || user.name || user.email || "U").charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  <span className="auth-name">{user.username || user.name || user.email}</span>
+                  <button type="button" className="auth-logout" onClick={logout}>
+                    Log out
+                  </button>
+                </div>
+              ) : (
+                <Link to="/login" className="auth-login-btn">
+                  Sign in
+                </Link>
+              )
+            )}
           </nav>
 
-          {/* Hamburger button */}
           <button
             className={`hamburger ${menuOpen ? "open" : ""}`}
             onClick={() => setMenuOpen(o => !o)}
@@ -60,13 +80,11 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile backdrop */}
       <div
         className={`mobile-backdrop ${menuOpen ? "visible" : ""}`}
         onClick={() => setMenuOpen(false)}
       />
 
-      {/* Mobile slide-in drawer */}
       <nav className={`mobile-nav ${menuOpen ? "open" : ""}`}>
         <div className="mobile-nav-header">
           <span className="mobile-nav-title">Menu</span>
@@ -85,6 +103,31 @@ export default function Header() {
               </Link>
             </li>
           ))}
+          <li className="mobile-auth-item">
+            {!loading && (
+              isAuthenticated ? (
+                <div className="auth-user mobile-auth">
+                  {user.avatar_url ? (
+                    <img src={user.avatar_url} alt="" className="auth-avatar" />
+                  ) : (
+                    <span className="auth-avatar auth-avatar-fallback">
+                      {(user.username || user.name || user.email || "U").charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  <div className="mobile-auth-meta">
+                    <span className="auth-name">{user.username || user.name || user.email}</span>
+                    <button type="button" className="auth-logout" onClick={logout}>
+                      Log out
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <Link to="/login" className="mobile-nav-link auth-login-mobile">
+                  Sign in
+                </Link>
+              )
+            )}
+          </li>
         </ul>
       </nav>
     </header>

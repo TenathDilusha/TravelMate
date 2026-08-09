@@ -4,16 +4,34 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from recommender import recommend
 from details import locations, location_type, get_top_reviews
+from auth import router as auth_router, ensure_users_table, frontend_url
 
 app = FastAPI()
 
+# Credentials + cookies require explicit origins (cannot use "*")
+_cors_origins = [
+    origin.strip()
+    for origin in os.getenv("CORS_ORIGINS", frontend_url()).split(",")
+    if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth_router)
+
+
+@app.on_event("startup")
+def on_startup():
+    try:
+        ensure_users_table()
+    except Exception as exc:
+        print(f"Warning: could not ensure users table: {exc}")
 
 @app.get("/")
 def read_root():
